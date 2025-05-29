@@ -56,5 +56,5 @@ If you find this code useful, please cite the following in your work:
 }
 ```
 ## Credits
-The code has been written by Cem Rifki Aydin
-Also, the dataset is received from: https://www.kaggle.com/code/nkitgupta/aspect-based-sentiment-analysis/notebook
+- The code has been written by Cem Rifki Aydin
+- Also, the dataset is received from: https://www.kaggle.com/code/nkitgupta/aspect-based-sentiment-analysis/notebook
