@@ -1,0 +1,10 @@
+--extra-index-url https://download.pytorch.org/whl/cu118
+pandas
+spacy
+scikit-learn
+gensim
+nltk
+numpy
+torch 
+transformers
+sentence_transformers
