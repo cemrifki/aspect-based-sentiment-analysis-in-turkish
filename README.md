@@ -4,7 +4,7 @@ This approach attempts to perform aspect-based sentiment analysis (ABSA) for Eng
 
 ## Requirements
 
-- Python 3.7 or a newer version
+- Python 3.8 or a newer version
 - pandas
 - torch
 - transformers
