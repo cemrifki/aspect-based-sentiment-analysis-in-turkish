@@ -59,7 +59,7 @@ def csv_reader(input_path):
     df = pd.read_csv(input_path)
 
     # Drop rows where any value is NaN
-    df = df.dropna(subset=["y"]).head(200)
+    df = df.dropna(subset=["y"])  # .head(200)
 
 
     df["label"] = df["y"] 
@@ -179,9 +179,19 @@ def main():
     # ------------------------------
     # Evaluation
     # ------------------------------
+    # These are label mappings
+    label_map = {"negative": 0, "positive": 1}
+
+    # If you want to reverse it for reporting:
+    inv_label_map = {v: k for k, v in label_map.items()}
+
+    # Now use this dict to generate `target_names` in order
+    target_names = [inv_label_map[i] for i in sorted(inv_label_map.keys())]
+
+
     y_pred = clf.predict(X_test)
     print("Classification Report:")
-    print(classification_report(y_test, y_pred, target_names=["negative", "positive"]))
+    print(classification_report(y_test, y_pred, target_names=target_names))
 
     # The predicted aspects and their corresponding sentiments of the test data are written to another .csv file as shown below:
     pd.DataFrame({"text": df_test["clean_review"], "aspect": df_test["aspect"], "sentiment": y_pred}).to_csv("test_asp_sents.csv", index=False)
