@@ -177,7 +177,7 @@ def main():
     clf.fit(X_train, y_train)
 
     # ------------------------------
-    # 6. Evaluation
+    # Evaluation
     # ------------------------------
     y_pred = clf.predict(X_test)
     print("Classification Report:")
