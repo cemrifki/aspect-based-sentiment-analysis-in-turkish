@@ -104,6 +104,7 @@ def preprocess(text):
 
 # -----------------------------------------------------------------------------
 # Extract the most representative aspects from the whole corpus (i.e., domain).
+# The LDA model, which is an unsupervised approach, is accordingly leveraged.
 # Top k (defined in the constants.py file) aspects are obtained in the end.
 # -----------------------------------------------------------------------------
 def generate_LDA_topic_aspects(docs, aspect_count):
@@ -183,7 +184,8 @@ def main():
     X_train = scaler.fit_transform(X_train)  # fit on train, transform train
     X_test = scaler.transform(X_test)        # transform test
 
-    clf = SVC(kernel='linear', C=1.0)  # You can also use 'rbf', 'poly', etc.
+    # The SVM classifier model is trained on the training data.
+    clf = SVC(kernel='linear', random_state=42, C=1.0)  # You can also use 'rbf', 'poly', etc.
     clf.fit(X_train, y_train)
 
     # ------------------------------
