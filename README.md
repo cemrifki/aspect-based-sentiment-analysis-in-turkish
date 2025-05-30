@@ -1,6 +1,6 @@
 # Aspect-Based Sentiment Analysis for Turkish 
 
-This approach attempts to perform aspect-based sentiment analysis (ABSA) for English first. This extracts aspects and then finds their sentiments. The corresponding data is received from: https://www.kaggle.com/code/nkitgupta/aspect-based-sentiment-analysis/. I have also updated the relevant code a lot, relying on other models (e.g., Sentence Transformers) for embeddings, different classifiers, further preprocessing techniques / rules and metrics as well. In the end, I could boost the performance even further by leveraging the SVM classifier, whose computation complexity is lower as compared to BERT models as is known. The corresponding code for Turkish will be available soon as well. However, anyway, this repo can be made language-agnostic by performing minor tweaks, such as changing the SBERT model and using the related spaCy model for a specific language.
+This approach attempts to perform aspect-based sentiment analysis (ABSA) for English first. This extracts aspects and then finds their sentiments. The corresponding data is received from: https://www.kaggle.com/code/nkitgupta/aspect-based-sentiment-analysis/. I have also updated the relevant code a lot, relying on other models (e.g., Sentence Transformers) for embeddings, different classifiers, further preprocessing techniques / rules and metrics as well. In the end, I could boost the performance even further by leveraging the SVM classifier, whose computation complexity is lower as compared to those of BERT models as is known. The corresponding code for Turkish will be available soon as well. However, anyway, this repo can be made language-agnostic by performing minor tweaks, such as changing the SBERT model and using the related spaCy model for a specific language.
 
 ## Requirements
 
@@ -19,7 +19,7 @@ This approach attempts to perform aspect-based sentiment analysis (ABSA) for Eng
  
  ## Execution
 
-Execute the file `main.py` to train the model and evaluate it on the test partition of the very same dataset. You can set the overall number of corpus aspects and the path to the input .csv file in the `constants.py` file, which can be considered as a config file.
+Execute the file `main.py` to train the model and evaluate it on the test partition of the very same dataset. You can set the name of the SBERT model, the overall number of corpus aspects, the path to the input .csv file, and the name of the text column in the `constants.py` file, which can be considered to be the config file.
 
 #### Setup with virtual environment (Python 3):
 

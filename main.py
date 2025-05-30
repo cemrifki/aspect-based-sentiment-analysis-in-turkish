@@ -5,6 +5,7 @@ This module performs aspect-based sentiment analysis using LDA for aspect extrac
 sentence-transformers for embeddings, and SVM for sentiment classification.
 
 Author: Cem Rifki Aydin
+Date: 29.05.2025
 
 """
 
@@ -48,12 +49,13 @@ model = SentenceTransformer(constants.SBERT_MODEL_NAME).to(device)
 
 en_stopwords = set(stopwords.words('english'))
 
-
+# Remove stopwords from texts in accordance with the list provided by the NLTK package.
 def remove_stopwords(text):
     text = [word for word in text if word not in en_stopwords]
     return text
 
 
+# Read the csv file
 def csv_reader(input_path):
 
     df = pd.read_csv(input_path)
@@ -61,8 +63,8 @@ def csv_reader(input_path):
     # Drop rows where any value is NaN
     df = df.dropna(subset=["y"])  # .head(200)
 
-
     df["label"] = df["y"] 
+    df = df.drop("y", axis=1)
     return df
 
 
@@ -70,32 +72,40 @@ def csv_reader(input_path):
 def cosine_similarity(a, b):
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
-
+# ------------------------------------------------------------------------------------------
+# The most probable aspect is extracted from a text (e.g. a sentence or a review). 
+# This relies on the already-created list of aspects from the whole corpus. 
+# Sentence embeddings and the cosine similarity metric are leveraged.
+# ------------------------------------------------------------------------------------------
 def best_aspect(text, corpus_aspects, aspect_embs):
     a = []
     text_emb = model.encode(text)   
-    # aspect_embs = [model.encode(asp) for asp in aspects] 
+    
     for aspect_emb in aspect_embs:
         a.append(cosine_similarity(text_emb, aspect_emb))
 
     return corpus_aspects[np.argmax(a)]
 
 
-# ------------------------------
+# --------------------
 # Generate embeddings
-# ------------------------------
-
+# --------------------
 def embed_text_aspect(row):
-    combined = f"{row['clean_review']}"
+    combined = f"{row[constants.TEXT_COLUMN]}"
     return model.encode(combined)
 
 # Preprocess with spaCy
 def preprocess(text):
     doc = nlp(text)
     lst = [token.lemma_.lower() for token in doc if token.pos_ == "NOUN" and token.is_alpha and not token.is_stop]
+    # If one only wants to eliminate stopwords defined with respect to the spaCy library, the below (NLTK) method can be commented out.
     lst = remove_stopwords(lst)
     return lst
 
+# -----------------------------------------------------------------------------
+# Extract the most representative aspects from the whole corpus (i.e., domain).
+# Top k (defined in the constants.py file) aspects are obtained in the end.
+# -----------------------------------------------------------------------------
 def generate_LDA_topic_aspects(docs, aspect_count):
 
     tokenized_docs = [preprocess(doc) for doc in docs]
@@ -124,25 +134,25 @@ def generate_LDA_topic_aspects(docs, aspect_count):
         for weight_str, token in matches:
             token_weights[token] += float(weight_str)
 
-    # Sort by weight descending and get top 5
+    # Sort by weight descending and get top k
     top_tokens = sorted(token_weights.items(), key=lambda x: x[1], reverse=True)[:aspect_count]
 
     aspects = []
-    print("Top 5 tokens with highest total weight across all topics:")
+    print(f"Top {aspect_count} tokens with highest total weight across all topics:")
 
     for token, weight in top_tokens:
-        print(f"{token}: {weight:.3f}")
+        print(f"{token}: {weight:.4f}")
         aspects.append(token)
 
     return aspects
 
+# Extract an aspect from each text (i.e. review) in the dataset. Return the list of aspects for the whole corpus in the end.
 def generate_aspects_and_embeddings(df):
     # Sample English reviews
-    docs = df["clean_review"].values
+    docs = df[constants.TEXT_COLUMN].values
 
     corpus_aspects = generate_LDA_topic_aspects(docs, constants.ASPECT_COUNT)
     aspect_embeddings = [model.encode(asp) for asp in corpus_aspects]
-
 
     best_aspects = []
 
@@ -150,7 +160,6 @@ def generate_aspects_and_embeddings(df):
         # In order to refrain from computing the embeddings of aspects over and over, I specify three inputs to the below function
         best_asp = best_aspect(doc, corpus_aspects, aspect_embeddings)
         best_aspects.append(best_asp)
-
 
     df["aspect"] = best_aspects
     return df
@@ -169,6 +178,7 @@ def main():
     X_test = np.vstack(df_test.apply(embed_text_aspect, axis=1))
     y_test = df_test["label"].tolist()
 
+    # Normalize the sentence embedding features accordingly
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)  # fit on train, transform train
     X_test = scaler.transform(X_test)        # transform test
@@ -188,13 +198,12 @@ def main():
     # Now use this dict to generate `target_names` in order
     target_names = [inv_label_map[i] for i in sorted(inv_label_map.keys())]
 
-
     y_pred = clf.predict(X_test)
     print("Classification Report:")
     print(classification_report(y_test, y_pred, target_names=target_names))
 
     # The predicted aspects and their corresponding sentiments of the test data are written to another .csv file as shown below:
-    pd.DataFrame({"text": df_test["clean_review"], "aspect": df_test["aspect"], "sentiment": y_pred}).to_csv("test_asp_sents.csv", index=False)
+    pd.DataFrame({"text": df_test[constants.TEXT_COLUMN], "aspect": df_test["aspect"], "sentiment": y_pred}).to_csv("test_asp_sents.csv", index=False)
 
 if __name__ == "__main__":
     main()
