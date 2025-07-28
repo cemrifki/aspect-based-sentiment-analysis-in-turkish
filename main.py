@@ -1,5 +1,5 @@
 """
-Aspect-Based Sentiment Analysis in English and Turkish (to be provided for the latter language as well soon.)
+Aspect-Based Sentiment Analysis in English and Turkish 
 
 This module performs aspect-based sentiment analysis using LDA for aspect extraction,
 sentence-transformers for embeddings, and SVM for sentiment classification.
@@ -23,6 +23,8 @@ from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report
+# from xgboost import XGBClassifier
+
 
 import spacy
 
@@ -30,13 +32,19 @@ import gensim
 from gensim import corpora
 from nltk.corpus import stopwords
 
+import warnings
+warnings.filterwarnings("ignore")
+
+LANG = constants.LANG  # "en" for English, "tr" for Turkish
+LANG_MODEL = "tr_core_news_trf" if LANG == "tr" else "en_core_web_sm"  # Load the appropriate spaCy language model
+
 # Attempt to download the model (only if not already installed)
 try:
-    nlp = spacy.load("en_core_web_sm")
+    nlp = spacy.load(LANG_MODEL)
 except OSError:
-    print("Downloading en_core_web_sm model...")
-    spacy.cli.download("en_core_web_sm")
-    nlp = spacy.load("en_core_web_sm")
+    print(f"Downloading {LANG_MODEL} model...")
+    spacy.cli.download(LANG_MODEL)
+    nlp = spacy.load(LANG_MODEL)
 
 # Set device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -47,11 +55,12 @@ print(f"Using device: {device}")
 # ------------------------------
 model = SentenceTransformer(constants.SBERT_MODEL_NAME).to(device)
 
-en_stopwords = set(stopwords.words('english'))
+# Load NLTK stopwords based on the language
+lang_stopwords = set(stopwords.words('turkish')) if LANG == "tr" else set(stopwords.words('english'))  
 
 # Remove stopwords from texts in accordance with the list provided by the NLTK package.
 def remove_stopwords(text):
-    text = [word for word in text if word not in en_stopwords]
+    text = [word for word in text if word not in lang_stopwords]
     return text
 
 
@@ -97,7 +106,7 @@ def embed_text_aspect(row):
 # Preprocess with spaCy
 def preprocess(text):
     doc = nlp(text)
-    lst = [token.lemma_.lower() for token in doc if token.pos_ == "NOUN" and token.is_alpha and not token.is_stop]
+    lst = [token.lemma_.lower() for token in doc if token.pos_ in ("NOUN", "noun") and token.is_alpha and not token.is_stop]
     # If one only wants to eliminate stopwords defined with respect to the spaCy library, the below (NLTK) method can be commented out.
     lst = remove_stopwords(lst)
     return lst
@@ -166,6 +175,7 @@ def generate_aspects_and_embeddings(df):
     return df
 
 def main():
+
     df = csv_reader(constants.INPUT_PATH)
     df = generate_aspects_and_embeddings(df)
 
@@ -183,10 +193,20 @@ def main():
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)  # fit on train, transform train
     X_test = scaler.transform(X_test)        # transform test
-
+# 
     # The SVM classifier model is trained on the training data.
     clf = SVC(kernel='linear', random_state=42, C=1.0)  # You can also use 'rbf', 'poly', etc.
     clf.fit(X_train, y_train)
+
+    # Initialize and fit the XGBoost classifier with GPU support
+    # xgb = XGBClassifier(
+    #     use_label_encoder=False,
+    #     eval_metric='logloss',
+    #     tree_method='gpu_hist',  # This enables GPU usage
+    #     predictor='gpu_predictor'  # Optional: speeds up prediction
+    # )   
+    # xgb.fit(X_train, y_train)
+
 
     # ------------------------------
     # Evaluation
@@ -201,6 +221,7 @@ def main():
     target_names = [inv_label_map[i] for i in sorted(inv_label_map.keys())]
 
     y_pred = clf.predict(X_test)
+    # y_pred = xgb.predict(X_test)
     print("Classification Report:")
     print(classification_report(y_test, y_pred, target_names=target_names))
 

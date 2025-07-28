@@ -1,10 +1,15 @@
 --extra-index-url https://download.pytorch.org/whl/cu118
+numpy==1.23.5
+thinc==8.1.5
+spacy==3.4.2
+https://huggingface.co/turkish-nlp-suite/tr_core_news_trf/resolve/main/tr_core_news_trf-1.0-py3-none-any.whl
+scipy
 pandas
-spacy
 scikit-learn
 gensim
 nltk
-numpy
-torch 
-transformers
-sentence_transformers
+xgboost
+lxml
+transformers==4.25.1
+sentence-transformers==2.2.2
+huggingface-hub==0.25.2

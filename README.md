@@ -1,21 +1,26 @@
 # Aspect-Based Sentiment Analysis for Turkish 
 
-This approach attempts to perform aspect-based sentiment analysis (ABSA) for English first. This extracts aspects and then finds their sentiments. The corresponding data is received from: https://www.kaggle.com/code/nkitgupta/aspect-based-sentiment-analysis/. I have also updated the relevant code a lot, relying on other models (e.g., Sentence Transformers) for embeddings, different classifiers, further preprocessing techniques / rules and metrics as well. In the end, I could boost the performance even further by leveraging the SVM classifier, whose computation complexity is lower as compared to those of BERT models as is known. The corresponding code for Turkish will be available soon as well. However, anyway, this repo can be made language-agnostic by performing minor tweaks, such as changing the SBERT model and using the related spaCy model for a specific language.
+This approach attempts to perform aspect-based sentiment analysis (ABSA) for English first. This extracts aspects and then finds their sentiments. The corresponding data is received from: https://www.kaggle.com/code/nkitgupta/aspect-based-sentiment-analysis/. I have also updated the relevant code a lot, relying on other models (e.g., Sentence Transformers) for embeddings, different classifiers, further preprocessing techniques / rules and metrics as well. In the end, I could boost the performance even further by leveraging the SVM classifier, whose computation complexity is lower as compared to those of BERT models as is known. The code is also adapted to Turkish. This repo can be adapted to other languages as well by performing minor tweaks, such as changing the corresponding SBERT model and using the related spaCy model for the specific language.
 
 ## Requirements
 
-- Python 3.8 or a newer version
+- Python 3.9 (or a newer version)
 - pandas
 - torch
 - transformers
 - spacy
+- thinc
+- scipy
 - scikit-learn 
 - gensim
 - sentence_transformers
 - nltk
 - numpy
+- huggingface-hub
+- lxml (optional)
+- xgboost (optional)
 
- The code can work through `Python 3.8` or a newer version thereof. I tested it relying on `Python 3.12`. In this project, `python3` and `pip3`. We leveraged two datasets, which are sentiment and spam corpora and which can be found in the input folder.
+ The code can work through `Python 3.9` or a newer version thereof. I tested it relying on `Python 3.9`. In this project, `python3` and `pip3`. We leveraged two datasets, which are sentiment and spam corpora and which can be found in the input folder.
  
  ## Execution
 
