@@ -19,7 +19,7 @@ This approach attempts to perform aspect-based sentiment analysis (ABSA). This e
 - huggingface-hub
 - lxml
 
- The code can work through `Python 3.9` or a newer version thereof. I tested it relying on `Python 3.9`. In this project, `python3` and `pip3`. We leveraged two datasets, which are sentiment and spam corpora and which can be found in the input folder.
+ The code can work through `Python 3.9` or a newer version thereof. I tested it relying on `Python 3.9`. In this project, `python3` and `pip3` commands are utilized. I leveraged two datasets, which are sentiment and spam corpora, which can be found in the data folder for the unsupervised approach mentioned. Also, I made use of the SemEval datasets for both the Turkish and English languages in the .xml format, where aspect categories and their corresponding polarities are provided in advance.
  
  ## Execution
 
