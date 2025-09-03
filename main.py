@@ -45,7 +45,7 @@ def main():
     parser.add_argument("--predict", action="store_true")
     parser.add_argument("--text", type=str, nargs="*")
     parser.add_argument("--model_dir", type=str, default=None)
-    parser.add_argument("--epochs", type=int, default=1)
+    parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch_size", type=int, default=4)
     parser.add_argument("--lr", type=float, default=5e-5)
     parser.add_argument("--weight_decay", type=float, default=0.01)
