@@ -85,7 +85,7 @@ def parse_xml_sentences(xml_path: str, lang: str = 'en') -> List[Dict[str, Any]]
                     pairs.append((category.upper(), polarity.lower()))
 
         examples.append({"text": text, "pairs": pairs})
-    return examples[:100]
+    return examples
 
 
 def build_label_space(examples: List[Dict[str, Any]]) -> List[str]:
