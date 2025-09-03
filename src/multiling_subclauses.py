@@ -1,9 +1,23 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
 """
-This module is used to generate subclauses from given sentences for English.
+multiling_subclauses.py
+This module provides functionality for generating subclauses from sentences in English and Turkish,
+using spaCy for dependency parsing. It includes preprocessing utilities for tokenization and normalization,
+and a SubclauseGenerator class that segments sentences into subclauses based on dependency relationships.
+The module is designed for aspect-based sentiment analysis and can be extended for other NLP tasks.
+Classes:
+    SubclauseGenerator: Generates subclauses from input sentences using dependency parsing.
+Functions:
+    normalize_tokenize(string): Preprocesses and tokenizes input text.
+    main(args=None): Example usage of SubclauseGenerator.
+Usage:
+    Run the module directly to see example subclause extraction for Turkish sentences.
+    The SubclauseGenerator can be instantiated for English ("en") or Turkish ("tr") and used to
+    convert sentences into lists of subclauses.
 
-@author: Cem Rıfkı Aydın
+    
+Author: Cem Rifki Aydin
+Date: 03.09.2025
+
 """
 
 import re
@@ -313,10 +327,6 @@ def main(args=None):
 
     # # Other example usages are given below.
     # print(sc.convert_to_subclauses("The service was awesome, and the food was incredible!"))
-    # print(sc.convert_to_subclauses("The vibe is relaxed and cozy, the service was great, and the ambiance was good!"))
-    # print(sc.convert_to_subclauses("I loved that too much!"))
-    # print(sc.convert_to_subclauses("And she said: \"God, I loved this movie so much!\""))
-    # print(sc.convert_to_subclauses("I just moved to this country and city, and I disliked here to be honest :(((((."))
     print(sc.convert_to_subclauses("Yemek çok iyiydi ve servis de süperdi. Ama fiyatlar biraz yüksekti."))
 
 if __name__ == "__main__":
