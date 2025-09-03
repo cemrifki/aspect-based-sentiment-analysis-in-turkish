@@ -11,7 +11,6 @@ from collections import defaultdict
 
 import spacy, spacy_transformers  # second import is a spaCy kink for Tranformer based models
 
-import re
 
 # Punctuation marks across the module can be handled more efficiently and consistently in future.
 p = re.compile(r"([.?!])[\"\']*$")
