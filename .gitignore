@@ -110,3 +110,5 @@ my_venv/
 
 # mypy
 .mypy_cache/
+
+outputs/
