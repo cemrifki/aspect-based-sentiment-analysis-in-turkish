@@ -59,12 +59,11 @@ python3 main.py \
 In order to predict a text sample, run the below:
 
 ```
-python3 main.py --predict \ 
-    --mode unsupervised \ 
-    --lang en \ 
-    --model_dir outputs/unsupervised/en \ 
-    --text "Its very nasty product thank you flipkart i have used its very nasty settings and camera is also bad battery is 
-    moreover the phone is evil for the money. "
+python3 main.py --predict \
+    --mode unsupervised \
+    --lang en \
+    --model_dir outputs/unsupervised/en \
+    --text "It is a very nice product."
 ```
 
 For the supervised approach, where aspects and their polarities are both given in the dataset, you can run the below to
